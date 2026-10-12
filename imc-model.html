@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#18384b">
+  <title>نموذج مشروع IMC | جميع التخصصات</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="imc-model.css">
+  <script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.js","three/addons/":"./vendor/three/jsm/"}}</script>
+</head>
+<body>
+  <header class="page-header">
+    <div class="project-mark" aria-hidden="true">◈</div>
+    <div class="heading"><h1>نموذج مشروع <bdi>IMC</bdi></h1><p>تنسيق النموذج بين جميع التخصصات</p></div>
+    
+  </header>
+  <main class="workspace">
+    <section class="model-area" aria-label="عرض نموذج المشروع">
+      <div id="viewport" aria-label="نموذج تفاعلي ثلاثي الأبعاد"></div>
+      <div class="view-label"><span class="view-dot" aria-hidden="true"></span><span>منظور ثلاثي الأبعاد</span><span class="unit">متر</span></div>
+      <div id="emptyState" class="empty-state" role="status" aria-live="polite">
+        <svg class="model-symbol" viewBox="0 0 120 108" fill="none" aria-hidden="true"><path d="m60 6 49 27v47L60 104 11 80V33L60 6Z"/><path d="m11 33 49 27 49-27M60 60v44M11 56l49 26 49-26M35 20l49 27v45M84 20 35 47v45"/></svg>
+        <h2 id="emptyTitle">جارٍ تجهيز العرض</h2>
+        <p id="emptyText">تجهيز التخصص الإنشائي…</p>
+        <button id="emptyRetry" class="primary" hidden>إعادة المحاولة</button>
+      </div>
+      <div id="fatalError" class="fatal-error" role="alert" hidden><h2>تعذّر تشغيل العرض</h2><p id="fatalText"></p><button type="button" id="reloadPage">إعادة تحميل الصفحة</button></div>
+      <nav class="view-tools" aria-label="أدوات النموذج">
+        <button id="fitView" disabled title="ضبط الكاميرا لاحتواء التخصصات الظاهرة">احتواء النموذج</button>
+        <button id="topView" disabled>منظر علوي</button>
+        <button id="fullscreen" aria-pressed="false">ملء الشاشة</button>
+      </nav>
+      <p class="navigation-hint">اسحب للدوران · عجلة الماوس للتقريب · الزر الأيمن للتحريك</p>
+    </section>
+    <aside class="discipline-panel" aria-label="التخصصات والتحكم">
+      <div class="panel-heading"><h2>مجموعات النموذج</h2><span id="visibleCount">٠ / ٦</span></div>
+      <p class="panel-intro">اختر العناصر التي تريد عرضها.</p>
+      <div class="selection-tools"><button id="showAll">إظهار الكل</button><button id="hideAll">إخفاء الكل</button></div>
+      <h3 class="filter-title">الأقسام</h3>
+      <div id="disciplines" class="discipline-list" role="group" aria-label="أقسام النموذج"></div>
+      <section class="section-control" aria-label="خريطة الموقع">
+        <label class="isolate-toggle"><input id="showSiteMap" type="checkbox" checked><span>إظهار خريطة الموقع</span></label>
+        <div class="selection-tools"><button id="siteOverview" disabled>الموقع المحيط</button></div>
+        <p id="siteMapStatus" role="status">جارٍ تحميل خريطة الموقع…</p>
+        <p>الموضع مطابق بصريًا للقطعة المرجعية. أخفِ الخريطة لفحص الأقبية والأساسات.</p>
+      </section>
+      <section class="section-control" aria-label="المستشفى القائم">
+        <label class="isolate-toggle"><input id="showHospital" type="checkbox" checked><span>مبنى المستشفى القائم</span></label>
+        <div class="selection-tools"><button id="hospitalFocus" disabled>تقريب المستشفى</button></div>
+        <p id="hospitalStatus" role="status">جارٍ تحميل مبنى المستشفى…</p>
+      </section>
+      <section class="section-control" aria-label="الرافعات البرجية">
+        <label class="isolate-toggle"><input id="showCranes" type="checkbox" checked><span>الرافعات البرجية · ٢</span></label>
+        <label class="isolate-toggle"><input id="showCraneRanges" type="checkbox" checked><span>دوائر نطاق الدوران</span></label>
+        <div class="selection-tools"><button id="cranePlan">مخطط الرافعتين</button></div>
+        <p><bdi>TC-01 / TC-02</bdi> · نصف قطر ٦٥ م</p>
+        <p>ارتفاعان تقديريان: ٥٠ و٥٨ م. المواضع والأبعاد تقريبية من الرسم، وليست خطة رفع معتمدة.</p>
+      </section>
+      <section class="floor-filter" aria-labelledby="floorTitle">
+        <div class="filter-heading"><h3 id="floorTitle" class="filter-title">الأدوار</h3><span id="floorCount"></span></div>
+        <div class="floor-tools">
+          <button type="button" id="allFloors">كل الأدوار</button>
+          <label class="isolate-toggle"><input type="checkbox" id="isolateFloor"><span>عزل دور واحد</span></label>
+        </div>
+        <div id="floors" class="floor-list" role="group" aria-label="أدوار النموذج"></div>
+        <p id="floorEmpty" class="floor-empty">تظهر الأدوار بعد تصدير النموذج وتحويله.</p>
+      </section>
+      <label class="isolate-toggle"><input type="checkbox" id="showRooms"><span>إظهار أحجام الغرف</span></label>
+      <div class="panel-summary" aria-live="polite"><span id="totalElements">— عنصر محمّل</span><span id="totalTriangles">— مثلث</span></div>
+      <section class="section-control" aria-label="القطاع الأفقي">
+        <label class="section-toggle"><input id="sectionEnabled" type="checkbox" disabled><span>قطاع أفقي</span><output id="sectionValue" for="sectionHeight">— م</output></label>
+        <input id="sectionHeight" type="range" min="0" max="100" value="100" step="0.1" disabled aria-label="منسوب القطاع بالمتر">
+        <p>يُخفي الجزء أعلى المنسوب المحدد.</p>
+      </section>
+      <div class="model-note"><span aria-hidden="true">ⓘ</span><p>ألوان المجسّمات من خامات النموذج. إخفاء تخصص يُبقيه جاهزًا لإظهاره مرة أخرى.</p></div>
+      <details class="help"><summary>تجهيز ملفات النموذج</summary><p>شغّل مُصدّر <bdi>ImcModelExport</bdi> في <bdi>Revit 2027</bdi>، وانتظر انتهاء التصدير، ثم شغّل أمر التحويل الموضح في ملف التعليمات. بعدها اضغط «إعادة المحاولة» أو حدّث الصفحة.</p></details>
+    </aside>
+  </main>
+  <footer class="page-footer"><span id="loadStatus" role="status" aria-live="polite">تجهيز عارض النموذج…</span><span id="renderStatus">ستة تخصصات · نموذج واحد</span></footer>
+  <noscript><div class="noscript">يتطلب العرض تفعيل JavaScript في المتصفح.</div></noscript>
+  <script type="module" src="imc-model.js"></script>
+  <script>if(location.protocol==='file:'){document.getElementById('emptyState').hidden=true;document.getElementById('fatalError').hidden=false;document.getElementById('fatalText').textContent='شغّل START_VIEWER5.cmd من مجلد المشروع، ثم افتح imc-model.html من عنوان الخادم الذي يظهر.';document.getElementById('reloadPage').onclick=function(){location.reload();};}</script>
+</body>
+</html>

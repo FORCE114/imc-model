@@ -1,0 +1,36 @@
+{
+  "name": "Existing IMC Hospital",
+  "approximate": true,
+  "footprintMetres": [
+    100,
+    125
+  ],
+  "maxRoofHeightMetres": 36,
+  "mapOriginPixel": [
+    537,
+    335
+  ],
+  "mapRotationDegrees": -60,
+  "scale": 1,
+  "materialCount": 15,
+  "vertices": 51302,
+  "triangles": 75928,
+  "assumptions": [
+    "Photographic reconstruction, not a surveyed or engineering BIM model",
+    "Heights and unseen elevations estimated",
+    "Map placement uses existing reference-map alignment"
+  ],
+  "features": [
+    "stepped limestone wings",
+    "pointed entrance arches",
+    "projecting oriel towers",
+    "blue bronze-framed glazing",
+    "ground arcades",
+    "central courtyard dome",
+    "palms and fountain",
+    "rear emergency canopy"
+  ],
+  "exportedTriangles": 85000,
+  "meshPrimitives": 14,
+  "roofPlantHeightMetres": 40
+}
