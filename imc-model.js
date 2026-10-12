@@ -659,7 +659,7 @@ function disposeModel(root) {
 async function start() {
   buildRows();
   $('reloadPage').addEventListener('click', () => location.reload());
-  if (location.protocol === 'file:') { fail('شغّل START_VIEWER5.cmd، ثم افتح imc-model.html من عنوان الخادم المحلي.'); return; }
+  if (location.protocol === 'file:') { fail('شغّل START_VIEWER TOWEC.cmd، ثم افتح imc-model.html من عنوان الخادم المحلي.'); return; }
   try {
     if (!MeshoptDecoder.supported) throw new Error('WebAssembly غير متاح لفك ضغط النماذج.');
     await MeshoptDecoder.ready;

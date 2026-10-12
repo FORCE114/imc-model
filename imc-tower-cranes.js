@@ -3,13 +3,12 @@ import * as THREE from 'three';
 // Diagram traced in image pixels against the approximately 108 x 50 m BIM footprint.
 // Positions, radii and heights are presentation estimates, not a lifting design.
 export const craneDefinitions = [
-  { id: 'TC-01', x: -17, z: -12, height: 50, radius: 65, heading: 120, colour: '#f0b429' },
-  { id: 'TC-02', x: 86, z: -12, height: 58, radius: 65, heading: 120, colour: '#38a7c3' }
+  { id: 'TC-01', x: 32.5, z: 38, height: 50, radius: 70, heading: 120, colour: '#f0b429' },
 ];
 
 export function createTowerCranes() {
   const root = new THREE.Group(); root.name = 'IMC tower cranes (diagram estimates)';
-  const ranges = new THREE.Group(); ranges.name = '65 m reference working radii';
+  const ranges = new THREE.Group(); ranges.name = '70 m reference working radius';
   const solids = new THREE.Group(); solids.name = 'Tower crane geometry';
   root.add(solids, ranges);
   const yellow = new THREE.MeshStandardMaterial({color:'#e8b128',roughness:.62,metalness:.2});
@@ -34,7 +33,7 @@ export function createTowerCranes() {
   function label(c) {
     const canvas=document.createElement('canvas');canvas.width=256;canvas.height=80;
     const ctx=canvas.getContext('2d');ctx.fillStyle='#18384b';ctx.fillRect(0,0,256,80);
-    ctx.fillStyle=c.colour;ctx.fillRect(0,0,10,80);ctx.fillStyle='white';ctx.textAlign='center';ctx.font='bold 34px Arial';ctx.fillText(c.id+' · 65 m',132,52);
+    ctx.fillStyle=c.colour;ctx.fillRect(0,0,10,80);ctx.fillStyle='white';ctx.textAlign='center';ctx.font='bold 34px Arial';ctx.fillText(c.id+' · '+c.radius+' m',132,52);
     const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
     const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:texture,depthTest:false,toneMapped:false}));
     sprite.position.set(c.x,c.height+11,c.z);sprite.scale.set(15,4.7,1);solids.add(sprite);

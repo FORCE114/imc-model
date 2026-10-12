@@ -52,11 +52,11 @@
         <p id="hospitalStatus" role="status">جارٍ تحميل مبنى المستشفى…</p>
       </section>
       <section class="section-control" aria-label="الرافعات البرجية">
-        <label class="isolate-toggle"><input id="showCranes" type="checkbox" checked><span>الرافعات البرجية · ٢</span></label>
+        <label class="isolate-toggle"><input id="showCranes" type="checkbox" checked><span>رافعة برجية واحدة</span></label>
         <label class="isolate-toggle"><input id="showCraneRanges" type="checkbox" checked><span>دوائر نطاق الدوران</span></label>
-        <div class="selection-tools"><button id="cranePlan">مخطط الرافعتين</button></div>
-        <p><bdi>TC-01 / TC-02</bdi> · نصف قطر ٦٥ م</p>
-        <p>ارتفاعان تقديريان: ٥٠ و٥٨ م. المواضع والأبعاد تقريبية من الرسم، وليست خطة رفع معتمدة.</p>
+        <div class="selection-tools"><button id="cranePlan">مخطط الرافعة</button></div>
+        <p><bdi>TC-01</bdi> · نصف قطر ٧٠ م</p>
+        <p>الموضع حسب الرسم: منتصف الحافة السفلية خارج المبنى. الارتفاع ٥٠ م ونصف القطر ٧٠ م تقديريان.</p>
       </section>
       <section class="floor-filter" aria-labelledby="floorTitle">
         <div class="filter-heading"><h3 id="floorTitle" class="filter-title">الأدوار</h3><span id="floorCount"></span></div>
@@ -81,6 +81,6 @@
   <footer class="page-footer"><span id="loadStatus" role="status" aria-live="polite">تجهيز عارض النموذج…</span><span id="renderStatus">ستة تخصصات · نموذج واحد</span></footer>
   <noscript><div class="noscript">يتطلب العرض تفعيل JavaScript في المتصفح.</div></noscript>
   <script type="module" src="imc-model.js"></script>
-  <script>if(location.protocol==='file:'){document.getElementById('emptyState').hidden=true;document.getElementById('fatalError').hidden=false;document.getElementById('fatalText').textContent='شغّل START_VIEWER5.cmd من مجلد المشروع، ثم افتح imc-model.html من عنوان الخادم الذي يظهر.';document.getElementById('reloadPage').onclick=function(){location.reload();};}</script>
+  <script>if(location.protocol==='file:'){document.getElementById('emptyState').hidden=true;document.getElementById('fatalError').hidden=false;document.getElementById('fatalText').textContent='شغّل START_VIEWER TOWEC.cmd من مجلد المشروع، ثم افتح imc-model.html من عنوان الخادم الذي يظهر.';document.getElementById('reloadPage').onclick=function(){location.reload();};}</script>
 </body>
 </html>
