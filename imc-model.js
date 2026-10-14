@@ -779,6 +779,7 @@ async function start() {
     });
     setSelected('STR', true);
     setSelected('ARCH', true);
+    updateSummary();
   } catch (error) { fail('تعذّر بدء العرض ثلاثي الأبعاد. تأكد من دعم WebGL 2 وتحديث المتصفح. ' + (error?.message || '')); }
 }
 
