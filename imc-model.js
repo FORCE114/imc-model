@@ -1,3 +1,6 @@
+import { createExcavation, createMapWithOpening } from './excavation.js';
+let excavationRoot=null, excavationBounds=null, mapSurface=null, mapOpening=null;
+import { createFacadeFinish } from './imc-facade-finish.js?v=windows-3';
 import { createTowerCranes } from './imc-tower-cranes.js';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -38,6 +41,7 @@ let sectionBounds = null, manifestAvailable = false, initialBatchFitPending = tr
 const clipPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 0);
 const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
 const errors = [];
+let facadeFinish = null;
 let towerCranes = null;
 let hospitalRoot = null, hospitalBounds = null, hospitalState = 'loading', hospitalTriangles = 0;
 let siteMap = null, siteMapState = 'loading', siteOverviewBounds = null;
@@ -121,6 +125,8 @@ function updateRow(item) {
 }
 
 function updateSummary() {
+  if(excavationRoot?.visible && !visibleItems().length){$('emptyState').hidden=true;$('fitView').disabled=$('topView').disabled=false;$('loadStatus').textContent='مرحلة الحفر والسور · عمق تقديري ٤٫٢ م';return;}
+
   const visible = visibleItems();
   $('visibleCount').textContent = number.format(visible.length) + ' / ' + number.format(disciplines.length);
   const sum = getter => visible.length && visible.every(item => getter(item) !== null) ? visible.reduce((n, item) => n + getter(item), 0) : visible.length ? null : 0;
@@ -293,6 +299,7 @@ function floorVisible(discipline, levelName) {
 }
 
 function applyFloors() {
+  facadeFinish?.syncDetails($('referenceFinish').checked && floorVisible('ARCH','5th FLOOR')); 
   for (const item of disciplines) {
     for (const { object, level } of item.levelObjects) {
       // ARCH sidecar maps this single context group exclusively to Revit element 3250027.
@@ -456,6 +463,7 @@ async function loadDiscipline(item) {
     disposeModel(root);
     throw new Error(item.id + ': no triangles in model');
   }
+  if (item.id === 'ARCH' && facadeFinish) { facadeFinish.register(root); facadeFinish.apply($('referenceFinish').checked); }
   item.root = root;
   item.bounds = box;
   item.physicalBounds = physicalBounds.isEmpty() ? box : physicalBounds;
@@ -476,6 +484,7 @@ function combinedBounds(visibleOnly = true) {
   for (const item of disciplines) if (item.bounds && (!visibleOnly || item.selected)) {
     box.union($('showRooms').checked ? item.bounds : (item.physicalBounds || item.bounds));
   }
+  if(excavationRoot?.visible && excavationBounds)box.union(excavationBounds);
   return box;
 }
 
@@ -521,6 +530,13 @@ async function loadSiteMap() {
     const plane = new THREE.Mesh(new THREE.PlaneGeometry(...rect.size), new THREE.MeshBasicMaterial({ map: texture, toneMapped: false, side: THREE.DoubleSide }));
     plane.rotation.x = -Math.PI / 2;
     plane.position.set((rect.min[0] + rect.max[0]) / 2, 0, -(rect.min[1] + rect.max[1]) / 2);
+    mapSurface=plane;
+    mapOpening=createMapWithOpening(rect,data.imc_site.corners,plane.material);group.add(mapOpening);
+    excavationRoot=createExcavation(data.imc_site.corners);
+    excavationRoot.position.fromArray(sitePlacement.centre);excavationRoot.rotation.y=sitePlacement.rotationY;
+    scene.add(excavationRoot);excavationRoot.updateMatrixWorld(true);excavationBounds=new THREE.Box3().setFromObject(excavationRoot);
+    THREE.DefaultLoadingManager.onLoad=renderSoon;
+    applyExcavation();updateSummary();fitView();
     group.add(plane);
     for (const [plot, colour] of [[data.imc_site, '#ffffff'], [data.large_plot, '#ffda49']]) {
       const points = plot.corners.map(([x,y]) => new THREE.Vector3(x, 0.16, -y));
@@ -542,6 +558,13 @@ async function loadSiteMap() {
   }
 }
 
+function applyExcavation(){
+  const visible=$('showExcavation').checked;
+  if(excavationRoot)excavationRoot.visible=visible;
+  if(mapSurface)mapSurface.visible=!visible;
+  if(mapOpening)mapOpening.visible=visible;
+  updateSummary();renderSoon();
+}
 function applySiteMap() {
   if (siteMap) siteMap.visible = $('showSiteMap').checked;
   if (grid) grid.visible = !siteMap?.visible;
@@ -587,6 +610,15 @@ function applySection() {
   $('sectionValue').textContent = metres.format(height) + ' م';
   $('sectionHeight').disabled = fatal || !$('sectionEnabled').checked || !visibleItems().length;
   renderSoon();
+}
+
+function focusFacade() {
+  setSelected("STR",false);
+  const centre = new THREE.Vector3(30,17,12);
+  const halfFov=THREE.MathUtils.degToRad(camera.fov)/2;
+  const distance=58/Math.sin(Math.min(halfFov,Math.atan(Math.tan(halfFov)*camera.aspect)))*1.12;
+  camera.position.copy(centre).addScaledVector(new THREE.Vector3(1,.12,1.45).normalize(),distance);
+  camera.near=.05;camera.far=3000;camera.updateProjectionMatrix();controls.target.copy(centre);controls.update();renderSoon();
 }
 
 function fitView(top = false, overview = false, hospitalOnly = false, cranesOnly = false) {
@@ -676,6 +708,7 @@ async function start() {
     $('viewport').appendChild(renderer.domElement);
     scene = new THREE.Scene();
     scene.background = new THREE.Color('#e5edf2');
+    facadeFinish = createFacadeFinish(renderer, scene);
     scene.add(new THREE.HemisphereLight('#ffffff', '#879aa4', 2.1));
     const sun = new THREE.DirectionalLight('#fff7ed', 2.6);
     sun.position.set(140, 200, 90); scene.add(sun);
@@ -702,6 +735,11 @@ async function start() {
     $('showCranes').addEventListener('change', () => { towerCranes.root.visible = $('showCranes').checked; renderSoon(); });
     $('showCraneRanges').addEventListener('change', () => { towerCranes.ranges.visible = $('showCraneRanges').checked; renderSoon(); });
     $('cranePlan').addEventListener('click', () => { $('showCranes').checked = true; $('showCraneRanges').checked = true; towerCranes.root.visible = true; towerCranes.ranges.visible = true; fitView(true, false, false, true); });
+    $('showExcavation').addEventListener('change',applyExcavation);
+    $('excavationPhase').addEventListener('click',()=>{for(const d of disciplines)setSelected(d.id,false);$('showExcavation').checked=true;applyExcavation();fitView();});
+    $('buildingPhase').addEventListener('click',()=>{$('showExcavation').checked=false;applyExcavation();setSelected('STR',true);setSelected('ARCH',true);});
+    $('referenceFinish').addEventListener('change', () => { facadeFinish.apply($('referenceFinish').checked); applyFloors(); renderSoon(); });
+    $('facadeFocus').addEventListener('click', focusFacade);
     $('fitView').addEventListener('click', () => fitView());
     $('topView').addEventListener('click', () => fitView(true));
     $('sectionEnabled').addEventListener('change', applySection);
@@ -739,8 +777,7 @@ async function start() {
     $('showRooms').addEventListener('change', () => {
       applyFloors(); updateGrid(); updateSectionRange(); fitView();
     });
-    setSelected('STR', true);
-    setSelected('ARCH', true);
+    updateSummary();
   } catch (error) { fail('تعذّر بدء العرض ثلاثي الأبعاد. تأكد من دعم WebGL 2 وتحديث المتصفح. ' + (error?.message || '')); }
 }
 
@@ -752,7 +789,9 @@ window.imcModelViewer = {
   fit: fitView,
   retry,
   snapshot: () => ({
+    excavation:excavationRoot?{visible:excavationRoot.visible,depth:excavationRoot.userData.depthMetres,mapOpening:mapOpening.visible,bounds:{min:excavationBounds.min.toArray(),max:excavationBounds.max.toArray()}}:null,
     threeRevision: THREE.REVISION,
+    facadeFinish: {enabled:$('referenceFinish').checked,...facadeFinish?.snapshot()},
     towerCranes: towerCranes ? {visible:towerCranes.root.visible,ranges:towerCranes.ranges.visible,definitions:towerCranes.definitions} : null,
     hospital: { status: hospitalState, visible: Boolean(hospitalRoot?.visible), triangles: hospitalTriangles, replacedContextHidden: byId.get('ARCH').levelObjects.some(({object}) => object.userData.groupId === 'group-00144' && !object.visible), bounds: hospitalBounds ? {min:hospitalBounds.min.toArray(),max:hospitalBounds.max.toArray()} : null },
     siteMap: { status: siteMapState, visible: Boolean(siteMap?.visible), placement: sitePlacement },

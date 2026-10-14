@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <meta name="theme-color" content="#18384b">
-  <title>نموذج مشروع IMC | جميع التخصصات</title>
+  <title>IMC SITE 5 | الواجهات المعمارية</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="imc-model.css">
   <script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.js","three/addons/":"./vendor/three/jsm/"}}</script>
@@ -13,7 +13,7 @@
 <body>
   <header class="page-header">
     <div class="project-mark" aria-hidden="true">◈</div>
-    <div class="heading"><h1>نموذج مشروع <bdi>IMC</bdi></h1><p>تنسيق النموذج بين جميع التخصصات</p></div>
+    <div class="heading"><h1>نموذج مشروع <bdi>IMC</bdi></h1><p>SITE 5 · الواجهات المعمارية والخامات المرجعية</p></div>
     
   </header>
   <main class="workspace">
@@ -40,7 +40,8 @@
       <div class="selection-tools"><button id="showAll">إظهار الكل</button><button id="hideAll">إخفاء الكل</button></div>
       <h3 class="filter-title">الأقسام</h3>
       <div id="disciplines" class="discipline-list" role="group" aria-label="أقسام النموذج"></div>
-      <section class="section-control" aria-label="خريطة الموقع">
+      <section class="panel-section"><h2>مرحلة الموقع</h2><label><input type="checkbox" id="showExcavation" checked> إظهار الحفرة والسور</label><p><button id="excavationPhase">مرحلة الحفر</button> <button id="buildingPhase">عرض المبنى</button></p><p>عمق الحفر تقديري: ٤٫٢ م، من ملف الموقع المرجعي.</p></section>
+<section class="section-control" aria-label="خريطة الموقع">
         <label class="isolate-toggle"><input id="showSiteMap" type="checkbox" checked><span>إظهار خريطة الموقع</span></label>
         <div class="selection-tools"><button id="siteOverview" disabled>الموقع المحيط</button></div>
         <p id="siteMapStatus" role="status">جارٍ تحميل خريطة الموقع…</p>
@@ -57,6 +58,12 @@
         <div class="selection-tools"><button id="cranePlan">مخطط الرافعة</button></div>
         <p><bdi>TC-01</bdi> · نصف قطر ٧٠ م</p>
         <p>الموضع حسب الرسم: منتصف الحافة السفلية خارج المبنى. الارتفاع ٥٠ م ونصف القطر ٧٠ م تقديريان.</p>
+      </section>
+      <section class="section-control" aria-label="خامات الواجهة">
+        <label class="isolate-toggle"><input id="referenceFinish" type="checkbox" checked><span>خامات الصورة المرجعية</span></label>
+        <div class="selection-tools"><button id="facadeFocus">تقريب الواجهة</button></div>
+        <p>حجر بيج · زجاج داكن · زخارف برونزية. ألغِ التفعيل لعرض خامات Revit الأصلية.</p>
+        <a href="assets/reference/3D.png" target="_blank" rel="noopener">عرض الصورة المرجعية</a>
       </section>
       <section class="floor-filter" aria-labelledby="floorTitle">
         <div class="filter-heading"><h3 id="floorTitle" class="filter-title">الأدوار</h3><span id="floorCount"></span></div>
