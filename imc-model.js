@@ -777,7 +777,8 @@ async function start() {
     $('showRooms').addEventListener('change', () => {
       applyFloors(); updateGrid(); updateSectionRange(); fitView();
     });
-    updateSummary();
+    setSelected('STR', true);
+    setSelected('ARCH', true);
   } catch (error) { fail('تعذّر بدء العرض ثلاثي الأبعاد. تأكد من دعم WebGL 2 وتحديث المتصفح. ' + (error?.message || '')); }
 }
 
